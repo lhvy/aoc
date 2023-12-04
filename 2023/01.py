@@ -4,11 +4,11 @@ raw = open("input.txt", "r", encoding="utf-8").read().strip().splitlines()
 
 
 def main():
-    # total = 0
-    # for l in raw:
-    #     n = re.sub(r"\D", "", l)
-    #     total += int(n[0] + n[-1])
-    # print(total)
+    total = 0
+    for l in raw:
+        n = re.sub(r"\D", "", l)
+        total += int(n[0] + n[-1])
+    print(total)
 
     total = 0
     for l in raw:
