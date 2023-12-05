@@ -84,11 +84,11 @@ def process_range(r):
     start = r[0]
     length = r[1]
     min_out = start + length
-    percent = 0
+    # percent = 0
     for i in range(0, length):
-        if i * 100 / length > percent:
-            percent = i * 100 / length
-            print(start, percent)
+        # if i * 100 / length > percent:
+        #     percent = i * 100 / length
+        #     print(start, percent)
         value = seed_map.do(start + i)
         value = soil_map.do(value)
         value = fertilizer_map.do(value)
