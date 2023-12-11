@@ -1,5 +1,5 @@
-lines = open("input.txt", "r", encoding="utf-8").read().strip().splitlines()
-lines = [[c for c in l] for l in lines]
+raw_lines = open("input.txt", "r", encoding="utf-8").read().strip().splitlines()
+lines = [[c for c in l] for l in raw_lines]
 
 for i, line in enumerate(lines):
     if "S" in line:
