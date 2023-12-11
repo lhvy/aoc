@@ -3,10 +3,10 @@ raw_lines = open("input.txt", "r", encoding="utf-8").read().strip().splitlines()
 rows = []
 cols = list(range(0, len(raw_lines[0])))
 for i, line in enumerate(raw_lines):
-    if "#" not in line:
+    indices = [i for i, x in enumerate(line) if x == "#"]
+    if len(indices) == 0:
         rows.append(i)
     else:
-        indices = [i for i, x in enumerate(line) if x == "#"]
         for index in indices:
             try:
                 cols.remove(index)
@@ -52,9 +52,9 @@ class Galaxy:
 
 galaxies: list[Galaxy] = []
 for y, line in enumerate(raw_lines):
-    indices = [i for i, x in enumerate(line) if x == "#"]
-    for x in indices:
-        galaxies.append(Galaxy(x, y))
+    for x, char in enumerate(line):
+        if char == "#":
+            galaxies.append(Galaxy(x, y))
 
 part_one = 0
 part_two = 0
