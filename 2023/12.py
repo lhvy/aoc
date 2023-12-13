@@ -12,7 +12,7 @@ def validate(row: str, damaged: tuple[int], cont: int):
             if cont > 0:
                 if len(damaged) < 1 or cont != damaged[0]:
                     return 0
-                damaged = damaged[1:]
+                damaged = tuple(damaged[1:])
                 cont = 0
         elif state == "?":
             valid = validate("." + row[(i + 1) :], damaged, cont)
