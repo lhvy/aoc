@@ -144,23 +144,30 @@ while len(queue) > 0:
     if (
         p.y > 0
         and (
-            (p.d != Direction.UP and p.n >= 4)
-            or (p.d == Direction.UP and p.n < 10 and 4 - p.n <= p.y)
+            # Not previously up, have gone 4+ in prev dir and minimum 4 room left to go up
+            (p.d != Direction.UP and p.n >= 4 and p.y >= 4)
+            # Previously up for less than 10
+            or (p.d == Direction.UP and p.n < 10)
         )
         and p.d != Direction.DOWN
     ):
+        # Calculate new number of previous steps up
         if p.d == Direction.UP:
             n = p.n + 1
         else:
             n = 1
+        # Calculate new exhaustion
         e = p.e + grid[p.y - 1][p.x]
+        # If cheaper, push to sorted queue (new exhaustion value is stored)
         if exhaustion[p.y - 1][p.x].cheaper(Direction.UP, n, e, p.x, p.y):
             bisect.insort(queue, Path(p.x, p.y - 1, Direction.UP, n, e))
     if (
         p.x > 0
         and (
-            (p.d != Direction.LEFT and p.n >= 4)
-            or (p.d == Direction.LEFT and p.n < 10 and 4 - p.n <= p.x)
+            # Not previously left, have gone 4+ in prev dir, and min 4 space to go left
+            (p.d != Direction.LEFT and p.n >= 4 and p.x >= 4)
+            # Previously left for less than 10
+            or (p.d == Direction.LEFT and p.n < 10)
         )
         and p.d != Direction.RIGHT
     ):
@@ -174,7 +181,10 @@ while len(queue) > 0:
     if (
         p.y < len(grid) - 1
         and (
-            (p.d != Direction.DOWN and p.n >= 4)
+            # Not previously down, have gone 4+ in prev dir, and min 4 spaces to go down
+            (p.d != Direction.DOWN and p.n >= 4 and len(grid) - 1 - p.y >= 4)
+            # Previously down less than 10 and (end Y can be reached before 10 turns
+            # or at least 5 moves left to reach Y, guaranteeing can be reached even if we turn away next)
             or (
                 p.d == Direction.DOWN
                 and p.n < 10
@@ -193,7 +203,10 @@ while len(queue) > 0:
     if (
         p.x < len(grid[p.y]) - 1
         and (
-            (p.d != Direction.RIGHT and p.n >= 4)
+            # Not previously right, have gone 4+ in prev dir, and min 4 spaces to go right
+            (p.d != Direction.RIGHT and p.n >= 4 and len(grid[p.y]) - 1 - p.x >= 4)
+            # Previously right less than 10 and (end X can be reached before 10 turns
+            # or at least 5 moves left to reach X, guaranteeing can be reached even if we turn away next)
             or (
                 p.d == Direction.RIGHT
                 and p.n < 10
