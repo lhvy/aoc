@@ -38,29 +38,21 @@ class Tile:
 
     def cheaper(self, d, n, e):
         if d == Direction.UP:
-            for i in range(n):
-                if self.up[i] <= e:
-                    return False
-            for i in range(n - 1, 10):
-                self.up[i] = e
+            if self.up[n - 1] <= e:
+                return False
+            self.up[n - 1] = e
         elif d == Direction.DOWN:
-            for i in range(n):
-                if self.down[i] <= e:
-                    return False
-            for i in range(n - 1, 10):
-                self.down[i] = e
+            if self.down[n - 1] <= e:
+                return False
+            self.down[n - 1] = e
         elif d == Direction.LEFT:
-            for i in range(n):
-                if self.left[i] <= e:
-                    return False
-            for i in range(n - 1, 10):
-                self.left[i] = e
+            if self.left[n - 1] <= e:
+                return False
+            self.left[n - 1] = e
         elif d == Direction.RIGHT:
-            for i in range(n):
-                if self.right[i] <= e:
-                    return False
-            for i in range(n - 1, 10):
-                self.right[i] = e
+            if self.right[n - 1] <= e:
+                return False
+            self.right[n - 1] = e
         return True
 
 
