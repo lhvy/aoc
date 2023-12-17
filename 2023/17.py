@@ -35,10 +35,8 @@ class Tile:
         self.down = [float("inf") for _ in range(10)]
         self.left = [float("inf") for _ in range(10)]
         self.right = [float("inf") for _ in range(10)]
-        self.x = -1
-        self.y = -1
 
-    def cheaper(self, d, n, e, x=-1, y=-1):
+    def cheaper(self, d, n, e):
         if d == Direction.UP:
             for i in range(n):
                 if self.up[i] <= e:
@@ -63,8 +61,6 @@ class Tile:
                     return False
             for i in range(n - 1, 10):
                 self.right[i] = e
-        self.x = x
-        self.y = y
         return True
 
 
@@ -159,7 +155,7 @@ while len(queue) > 0:
         # Calculate new exhaustion
         e = p.e + grid[p.y - 1][p.x]
         # If cheaper, push to sorted queue (new exhaustion value is stored)
-        if exhaustion[p.y - 1][p.x].cheaper(Direction.UP, n, e, p.x, p.y):
+        if exhaustion[p.y - 1][p.x].cheaper(Direction.UP, n, e):
             bisect.insort(queue, Path(p.x, p.y - 1, Direction.UP, n, e))
     if (
         p.x > 0
@@ -176,7 +172,7 @@ while len(queue) > 0:
         else:
             n = 1
         e = p.e + grid[p.y][p.x - 1]
-        if exhaustion[p.y][p.x - 1].cheaper(Direction.LEFT, n, e, p.x, p.y):
+        if exhaustion[p.y][p.x - 1].cheaper(Direction.LEFT, n, e):
             bisect.insort(queue, Path(p.x - 1, p.y, Direction.LEFT, n, e))
     if (
         p.y < len(grid) - 1
@@ -198,7 +194,7 @@ while len(queue) > 0:
         else:
             n = 1
         e = p.e + grid[p.y + 1][p.x]
-        if exhaustion[p.y + 1][p.x].cheaper(Direction.DOWN, n, e, p.x, p.y):
+        if exhaustion[p.y + 1][p.x].cheaper(Direction.DOWN, n, e):
             bisect.insort(queue, Path(p.x, p.y + 1, Direction.DOWN, n, e))
     if (
         p.x < len(grid[p.y]) - 1
@@ -223,7 +219,7 @@ while len(queue) > 0:
         else:
             n = 1
         e = p.e + grid[p.y][p.x + 1]
-        if exhaustion[p.y][p.x + 1].cheaper(Direction.RIGHT, n, e, p.x, p.y):
+        if exhaustion[p.y][p.x + 1].cheaper(Direction.RIGHT, n, e):
             bisect.insort(queue, Path(p.x + 1, p.y, Direction.RIGHT, n, e))
 
 print(
@@ -234,10 +230,3 @@ print(
         ]
     )
 )
-
-# current = exhaustion[-1][-1]
-# while current.x != -1 and current.y != -1:
-#     print(current.x, current.y)
-#     input()
-#     grid[current.y][current.x] = "#"
-#     current = exhaustion[current.y][current.x]
