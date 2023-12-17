@@ -1,5 +1,4 @@
 from enum import Enum
-import functools
 
 raw_lines = open("input.txt", "r", encoding="utf-8").read().strip().splitlines()
 grid = [[int(c) for c in line] for line in raw_lines]
@@ -28,7 +27,6 @@ class Tile:
         self.left = [float("inf"), float("inf"), float("inf")]
         self.right = [float("inf"), float("inf"), float("inf")]
 
-    @functools.lru_cache(maxsize=None)
     def cheaper(self, d, n, e):
         if d == Direction.UP:
             for i in range(n):
