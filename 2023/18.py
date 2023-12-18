@@ -7,84 +7,49 @@ class Coordinate:
         self.y = y
 
 
-def make_plan(instructions):
-    # plan = [["#"]]
-    digger = Coordinate(0, 0)
+def get_points(instructions):
+    points = [Coordinate(0, 0)]
+    perimeter = 0
     for direction, steps in instructions:
-        print(direction, steps)
+        perimeter += steps
+        prev = points[-1]
+        # print(direction, steps)
         if direction == "U":
-            for _ in range(0, steps - digger.y):
-                plan.insert(0, ["." for _ in range(len(plan[0]))])
-                digger.y += 1
-            for _ in range(steps):
-                digger.y -= 1
-                plan[digger.y][digger.x] = "#"
+            points.append(Coordinate(prev.x, prev.y - steps))
         elif direction == "D":
-            # print(direction, steps, color)
-            # print(digger.x, len(plan[0]), len(plan[digger.y]))
-            for _ in range(0, digger.y + steps - (len(plan) - 1)):
-                plan.append(["." for _ in range(len(plan[0]))])
-            for _ in range(steps):
-                digger.y += 1
-                # print(digger.x, len(plan[0]), len(plan[digger.y]))
-                plan[digger.y][digger.x] = "#"
+            points.append(Coordinate(prev.x, prev.y + steps))
         elif direction == "L":
-            if steps - digger.x > 0:
-                for i, line in enumerate(plan):
-                    plan[i] = ["." for _ in range(0, steps - digger.x)] + line
-                digger.x += steps - digger.x
-            for _ in range(steps):
-                digger.x -= 1
-                plan[digger.y][digger.x] = "#"
+            points.append(Coordinate(prev.x - steps, prev.y))
         elif direction == "R":
-            missing = digger.x + steps - (len(plan[digger.y]) - 1)
-            if missing > 0:
-                for i, line in enumerate(plan):
-                    plan[i] = line + ["." for _ in range(0, missing)]
-            for _ in range(steps):
-                digger.x += 1
-                plan[digger.y][digger.x] = "#"
+            points.append(Coordinate(prev.x + steps, prev.y))
+    return points, perimeter
 
 
-def count_space():
-    queue = []
-    for i in range(len(plan[0])):
-        queue.append(Coordinate(i, 0))
-        queue.append(Coordinate(i, len(plan) - 1))
-    for i in range(len(plan)):
-        queue.append(Coordinate(0, i))
-        queue.append(Coordinate(len(plan[i]) - 1, i))
+def count_space(points: list[Coordinate], perimeter: int):
+    # Shoelace Formula
+    area = 0
+    # Need starting point at the end for shoelace
+    points.append(points[0])
+    for i in range(len(points) - 1):
+        area += points[i].x * points[i + 1].y
+        area -= points[i].y * points[i + 1].x
+    area /= 2
+    # Remove bonus point from shoelace
+    points.pop()
 
-    while len(queue) > 0:
-        c = queue.pop(0)
-        if plan[c.y][c.x] != ".":
-            continue
-        plan[c.y][c.x] = "%"
-        if c.y > 0:
-            queue.append(Coordinate(c.x, c.y - 1))
-        if c.y < len(plan) - 1:
-            queue.append(Coordinate(c.x, c.y + 1))
-        if c.x > 0:
-            queue.append(Coordinate(c.x - 1, c.y))
-        if c.x < len(plan[c.y]) - 1:
-            queue.append(Coordinate(c.x + 1, c.y))
-
-    total = len(plan) * len(plan[0])
-    for line in plan:
-        total -= line.count("%")
-        # print("".join(line))
-    return total
+    # Pick's Theorem
+    return area + 1 + perimeter / 2
 
 
+# Part 1
 instructions = []
 for instruction in raw_lines:
     d, s, _ = instruction.split()
     instructions.append(tuple([d, int(s)]))
-plan = [["#"]]
-make_plan(instructions)
-print(count_space())
+pts, per = get_points(instructions)
+print(count_space(pts, per))
 
-# Note: This is too slow :(
+# Part 2
 instructions = []
 for instruction in raw_lines:
     _, _, color = instruction.split()
@@ -99,6 +64,5 @@ for instruction in raw_lines:
     elif color[-1] == "3":
         d = "U"
     instructions.append(tuple([d, int(s)]))
-plan = [["#"]]
-make_plan(instructions)
-print(count_space())
+pts, per = get_points(instructions)
+print(count_space(pts, per))
