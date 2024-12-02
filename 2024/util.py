@@ -3,6 +3,10 @@ def get_input_lines(filename="input.txt"):
         return f.read().splitlines()
 
 
+def get_input_lines_of_ints(filename="input.txt"):
+    return [[int(x) for x in l.split()] for l in get_input_lines(filename)]
+
+
 def get_input_lines_int(filename="input.txt"):
     return [int(l) for l in get_input_lines(filename)]
 
